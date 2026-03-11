@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>P_TR_CK // S_R_NS_N</title>
+		<style>
+			body {
+			  font-family: "Courier New", Courier, monospace;
+			  margin: 0px 0px 0px 0px;
+			  height: 100vh;
+			  width: 100vw;
+			}
+			.flex {
+			  display: flex;
+			}
+			
+			.justify-content-center {
+			  justify-content: center;
+			}
+			
+			.align-items-center {
+			  align-items: center;
+			}
+			
+			.h-100 {
+			  height: 100vh;
+			}
+			
+			.w-100 {
+			  width: 100vw;
+			}
+			
+			.m-0 {
+			  margin: 0px 0px 0px 0px;
+			}
+			
+			.pixel {
+			  position: fixed;
+			  pointer-events: none;
+			}
+			
+			.line {
+			  position: fixed;
+			  pointer-events: none;
+			  transform-origin: center; /* rotate around center */
+			}
+		</style>
+	</head>
+	<body>
+		<div class="flex justify-content-center align-items-center h-100 w-100">
+			<p id="centerTextBox">HEJ</p>
+		</div>
+		
+		
+		
+		<script>
+
+			function randomBetween(min, max) {
+			  return Math.random() * (max - min) + min;
+			}
+
+			function randomColor() {
+			  return `rgb(20,20,20)`;
+			}
+
+			/* PIXELS */
+
+			function flashPixel(duration, size) {
+
+			  const pixel = document.createElement("div");
+			  pixel.className = "pixel";
+
+			  pixel.style.backgroundColor = randomColor();
+
+			  pixel.style.left = Math.random() * window.innerWidth + "px";
+			  pixel.style.top = Math.random() * window.innerHeight + "px";
+
+			  pixel.style.width = size + "px";
+			  pixel.style.height = size + "px";
+
+			  document.body.appendChild(pixel);
+
+
+			  setTimeout(() => pixel.remove(), duration);
+			}
+
+			/* LINES */
+
+			function flashLine(duration) {
+			  const line = document.createElement("div");
+			  line.style.position = "fixed";
+			  line.style.pointerEvents = "none";
+			  line.style.backgroundColor = randomColor();
+
+			  const thickness = randomBetween(1, 2);
+			  const isVertical = Math.random() > 0.5;
+
+			  if (isVertical) {
+				// vertical line
+				line.style.width = thickness + "px";
+				line.style.height = window.innerHeight + "px";
+				line.style.left = randomBetween(0, window.innerWidth) + "px";
+				line.style.top = "0px";
+			  } else {
+				// horizontal line
+				line.style.width = window.innerWidth + "px";
+				line.style.height = thickness + "px";
+				line.style.left = "0px";
+				line.style.top = randomBetween(0, window.innerHeight) + "px";
+			  }
+
+			  const rotationAngle = Math.random() * 2;
+			  // rotate around center
+			  line.style.transform = `rotate(${rotationAngle}deg)`;
+
+			  document.body.appendChild(line);
+
+			  // remove after a short duration so it doesn't accumulate
+			  setTimeout(() => line.remove(), duration);
+			}
+			
+			function glitchElement(elementId){
+				const c = document.getElementById(elementId);
+				c.style.transform = `translate(${randomBetween(-2,2)}px, ${randomBetween(-2,2)}px)`;
+			}
+
+			/* LOOP */
+
+			function pixelLoop() {
+
+			  let interval = randomBetween(40, 5000);
+
+			  for (let i=0; i<randomBetween(2,8); i++) {
+				  let timeBetween = randomBetween(5, 200);
+				  let duration = randomBetween(20, 350);
+				  let size = randomBetween(2, 6);
+			  
+				setTimeout(() => flashPixel(duration, size), timeBetween);
+			  }
+
+			  setTimeout(pixelLoop, interval);
+			}
+			
+			function lineLoop() {
+			  let interval = randomBetween(40, 15000);
+
+
+			  for (let i=0; i<randomBetween(1,3); i++) {
+				let timeBetween = randomBetween(5, 500);
+				let duration = randomBetween(20, 200);
+					
+				setTimeout(() => flashLine(duration), timeBetween);
+			  }
+
+			  setTimeout(lineLoop, interval);
+			}
+			
+			function jitterLoop(){
+				let interval = randomBetween(200, 20000);
+				
+				for (let i=0; i<randomBetween(1,2); i++) {
+					let timeBetweenGlith = randomBetween(5, 50);
+					
+					setTimeout(() => glitchElement("centerTextBox"), timeBetweenGlith);
+				}
+				
+				setTimeout(jitterLoop, interval);
+			}
+
+			pixelLoop();
+			lineLoop();
+			jitterLoop();
+
+		</script>
+		
+	</body>
+</html>   
